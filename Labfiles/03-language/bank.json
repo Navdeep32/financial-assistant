@@ -1,8 +1,8 @@
 {
     "api-version": "2021-11-01-preview",
     "metadata": {
-        "name": "Clock",
-        "description": "Natural language clock",
+        "name": "Bank",
+        "description": "Financial Assistant",
         "type": "Conversation",
         "multilingual": false,
         "language": "en-us",
@@ -13,317 +13,187 @@
     "assets": {
         "intents": [
             {
-                "name": "None"
+                "name": "CheckBalance"
             },
             {
-                "name": "GetTime"
+                "name": "TransferMoney"
             },
             {
-                "name": "GetDay"
+                "name": "TrackSpending"
             },
             {
-                "name": "GetDate"
+                "name": "PayBill"
+            },
+            {
+                "name": "ReportFraud"
             }
+            
         ],
         "entities": [
             {
-                "name": "Location",
-                "compositionSetting": "ReturnLongestOverlap",
-                "list": null,
-                "prebuiltEntities": null
-            },
-            {
-                "name": "Weekday",
+                "name": "AccountType",
                 "compositionSetting": "ReturnLongestOverlap",
                 "list": {
                     "sublists": [
                         {
-                            "listKey": "Saturday",
-                            "synonyms": [
-                                {
-                                    "language": "en-us",
-                                    "values": [
-                                        "Sat"
-                                    ]
-                                }
-                            ]
+                            "listKey": "checking",
+                            "synonyms": [{"language": "en-us", "values": ["checking account"]}]
                         },
                         {
-                            "listKey": "Friday",
-                            "synonyms": [
-                                {
-                                    "language": "en-us",
-                                    "values": [
-                                        "Fri"
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "listKey": "Thursday",
-                            "synonyms": [
-                                {
-                                    "language": "en-us",
-                                    "values": [
-                                        "Thu",
-                                        "Thur",
-                                        "Thurs"
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "listKey": "Wednesday",
-                            "synonyms": [
-                                {
-                                    "language": "en-us",
-                                    "values": [
-                                        "Wed",
-                                        "Weds"
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "listKey": "Tuesday",
-                            "synonyms": [
-                                {
-                                    "language": "en-us",
-                                    "values": [
-                                        "Tue",
-                                        "Tues"
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "listKey": "Monday",
-                            "synonyms": [
-                                {
-                                    "language": "en-us",
-                                    "values": [
-                                        "Mon"
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "listKey": "Sunday",
-                            "synonyms": [
-                                {
-                                    "language": "en-us",
-                                    "values": [
-                                        "Sun"
-                                    ]
-                                }
-                            ]
+                            "listKey": "savings",
+                            "synonyms": [{"language": "en-us", "values": ["savings account"]}]
                         }
                     ]
-                },
-                "prebuiltEntities": null
+                }
             },
             {
-                "name": "Date",
+                "name": "Amount",
                 "compositionSetting": "ReturnLongestOverlap",
                 "list": null,
                 "prebuiltEntities": [
                     {
-                        "displayName": "DateTime",
-                        "semanticType": "DateTime",
-                        "semanticSubtype": null
+                        "displayName": "Number",
+                        "semanticType": "Currency"
                     }
                 ]
+            },
+            {
+                "name": "Category",
+                "compositionSetting": "ReturnLongestOverlap",
+                "list": {
+                    "sublists": [
+                        {
+                            "listKey": "groceries",
+                            "synonyms": [{"language": "en-us", "values": ["food", "supermarket"]}]
+                        },
+                        {
+                            "listKey": "dining",
+                            "synonyms": [{"language": "en-us", "values": ["restaurant", "food"]}]
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "Payee",
+                "compositionSetting": "ReturnLongestOverlap",
+                "list": {
+                    "sublists": [
+                        {
+                            "listKey": "electric bill",
+                            "synonyms": [{"language": "en-us", "values": ["electricity", "power"]}]
+                        },
+                        {
+                            "listKey": "mortgage",
+                            "synonyms": [{"language": "en-us", "values": ["house payment"]}]
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "TimeFrame",
+                "compositionSetting": "ReturnLongestOverlap",
+                "list": {
+                    "sublists": [
+                        {
+                            "listKey": "last month",
+                            "synonyms": [{"language": "en-us", "values": ["previous month"]}]
+                        },
+                        {
+                            "listKey": "next week",
+                            "synonyms": [{"language": "en-us", "values": ["coming week"]}]
+                        }
+                    ]
+                }
             }
+            
         ],
         "examples": [
             {
-                "text": "what day will it be on Dec 31st 2099?",
+                "text": "What's my checking account balance?",
                 "language": "en-us",
-                "intent": "GetDay",
+                "intent": "CheckBalance",
                 "entities": [
                     {
-                        "entityName": "Date",
-                        "offset": 23,
-                        "length": 13
+                        "entityName": "AccountType",
+                        "offset": 10,
+                        "length": 17
                     }
                 ],
                 "dataset": "Train"
             },
             {
-                "text": "what day was 01/01/1901?",
+                "text": "Transfer $200 from savings to checking",
                 "language": "en-us",
-                "intent": "GetDay",
+                "intent": "TransferMoney",
                 "entities": [
                     {
-                        "entityName": "Date",
-                        "offset": 13,
+                        "entityName": "Amount",
+                        "offset": 9,
+                        "length": 4
+                    },
+                    {
+                        "entityName": "AccountType",
+                        "offset": 19,
+                        "length": 7
+                    },
+                    {
+                        "entityName": "AccountType",
+                        "offset": 30,
+                        "length": 8
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "How much did I spend on groceries last month?",
+                "language": "en-us",
+                "intent": "TrackSpending",
+                "entities": [
+                    {
+                        "entityName": "Category",
+                        "offset": 26,
+                        "length": 9
+                    },
+                    {
+                        "entityName": "TimeFrame",
+                        "offset": 36,
                         "length": 10
                     }
                 ],
                 "dataset": "Train"
             },
             {
-                "text": "what will the date be on Thurs?",
+                "text": "Pay my electric bill due next week",
                 "language": "en-us",
-                "intent": "GetDate",
+                "intent": "PayBill",
                 "entities": [
                     {
-                        "entityName": "Weekday",
-                        "offset": 25,
-                        "length": 5
+                        "entityName": "Payee",
+                        "offset": 7,
+                        "length": 12
+                    },
+                    {
+                        "entityName": "TimeFrame",
+                        "offset": 26,
+                        "length": 9
                     }
                 ],
                 "dataset": "Train"
             },
             {
-                "text": "what date will it be on Friday?",
+                "text": "I don't recognize this charge for $43.99",
                 "language": "en-us",
-                "intent": "GetDate",
+                "intent": "ReportFraud",
                 "entities": [
                     {
-                        "entityName": "Weekday",
-                        "offset": 24,
+                        "entityName": "Amount",
+                        "offset": 32,
                         "length": 6
                     }
                 ],
-                "dataset": "Train"
-            },
-            {
-                "text": "what date was it on Saturday?",
-                "language": "en-us",
-                "intent": "GetDate",
-                "entities": [
-                    {
-                        "entityName": "Weekday",
-                        "offset": 20,
-                        "length": 8
-                    }
-                ],
-                "dataset": "Train"
-            },
-            {
-                "text": "what's the time in New York?",
-                "language": "en-us",
-                "intent": "GetTime",
-                "entities": [
-                    {
-                        "entityName": "Location",
-                        "offset": 19,
-                        "length": 8
-                    }
-                ],
-                "dataset": "Train"
-            },
-            {
-                "text": "tell me the time in Paris?",
-                "language": "en-us",
-                "intent": "GetTime",
-                "entities": [
-                    {
-                        "entityName": "Location",
-                        "offset": 20,
-                        "length": 5
-                    }
-                ],
-                "dataset": "Train"
-            },
-            {
-                "text": "what time is it in London?",
-                "language": "en-us",
-                "intent": "GetTime",
-                "entities": [
-                    {
-                        "entityName": "Location",
-                        "offset": 19,
-                        "length": 6
-                    }
-                ],
-                "dataset": "Train"
-            },
-            {
-                "text": "what's today's date?",
-                "language": "en-us",
-                "intent": "GetDate",
-                "entities": [],
-                "dataset": "Train"
-            },
-            {
-                "text": "what is the date today?",
-                "language": "en-us",
-                "intent": "GetDate",
-                "entities": [],
-                "dataset": "Train"
-            },
-            {
-                "text": "what's the date?",
-                "language": "en-us",
-                "intent": "GetDate",
-                "entities": [],
-                "dataset": "Train"
-            },
-            {
-                "text": "what date is it?",
-                "language": "en-us",
-                "intent": "GetDate",
-                "entities": [],
-                "dataset": "Train"
-            },
-            {
-                "text": "what day of the week is it?",
-                "language": "en-us",
-                "intent": "GetDay",
-                "entities": [],
-                "dataset": "Train"
-            },
-            {
-                "text": "what is the day today?",
-                "language": "en-us",
-                "intent": "GetDay",
-                "entities": [],
-                "dataset": "Train"
-            },
-            {
-                "text": "what's the day?",
-                "language": "en-us",
-                "intent": "GetDay",
-                "entities": [],
-                "dataset": "Train"
-            },
-            {
-                "text": "what day is it?",
-                "language": "en-us",
-                "intent": "GetDay",
-                "entities": [],
-                "dataset": "Train"
-            },
-            {
-                "text": "tell me the time",
-                "language": "en-us",
-                "intent": "GetTime",
-                "entities": [],
-                "dataset": "Train"
-            },
-            {
-                "text": "what time is it?",
-                "language": "en-us",
-                "intent": "GetTime",
-                "entities": [],
-                "dataset": "Train"
-            },
-            {
-                "text": "what's the time?",
-                "language": "en-us",
-                "intent": "GetTime",
-                "entities": [],
-                "dataset": "Train"
-            },
-            {
-                "text": "what is the time?",
-                "language": "en-us",
-                "intent": "GetTime",
-                "entities": [],
                 "dataset": "Train"
             }
+            
         ]
     }
 }
