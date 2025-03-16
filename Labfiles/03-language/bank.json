@@ -68,7 +68,7 @@
                         },
                         {
                             "listKey": "dining",
-                            "synonyms": [{"language": "en-us", "values": ["restaurant", "food"]}]
+                            "synonyms": [{"language": "en-us", "values": ["restaurant"]}]
                         }
                     ]
                 }

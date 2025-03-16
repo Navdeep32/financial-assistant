@@ -20,7 +20,7 @@ def main():
             if userText.lower() != 'quit':
 
                 # Call the Language service model to get intent and entities
-                cls_project = 'bank'
+                cls_project = 'Bank'
                 deployment_slot = 'production'
 
                 with client:
@@ -94,7 +94,7 @@ def main():
                     payee = next((e["text"] for e in entities if e["category"].lower() == "payee"), None)
                     amount = next((e["text"] for e in entities if e["category"].lower() == "amount"), None)
                     time_frame = next((e["text"] for e in entities if e["category"].lower() == "timeframe"), None)
-                    if payee and amount:
+                    if payee and amount and time_frame:
                         print(pay_bill(amount, payee, time_frame))
                     else:
                         print("Please provide both the payee and amount.")
@@ -102,7 +102,7 @@ def main():
                 elif top_intent == 'ReportFraud':
                     amount = next((e["text"] for e in entities if e["category"].lower() == "amount"), None)
                     category = next((e["text"] for e in entities if e["category"].lower() == "category"), None)
-                    if amount:
+                    if amount and category:
                         print(report_fraud(amount, category))
                     else:
                         print("Please specify the fraudulent amount.")
