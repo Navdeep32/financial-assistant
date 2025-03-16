@@ -10,7 +10,7 @@ def main():
         ls_prediction_endpoint = os.getenv('LS_CONVERSATIONS_ENDPOINT')
         ls_prediction_key = os.getenv('LS_CONVERSATIONS_KEY')
 
-        # Create a client for the Language service model once
+        # Create a client for the Language service model once (OUTSIDE the loop)
         client = ConversationAnalysisClient(ls_prediction_endpoint, AzureKeyCredential(ls_prediction_key))
 
         # Get user input (until they enter "quit")
@@ -23,41 +23,40 @@ def main():
                 cls_project = 'Bank'
                 deployment_slot = 'production'
 
-                with client:
-                    query = userText
-                    result = client.analyze_conversation(
-                        task={
-                            "kind": "Conversation",
-                            "analysisInput": {
-                                "conversationItem": {
-                                    "participantId": "1",
-                                    "id": "1",
-                                    "modality": "text",
-                                    "language": "en",
-                                    "text": query
-                                },
-                                "isLoggingEnabled": False
+                query = userText
+                result = client.analyze_conversation(
+                    task={
+                        "kind": "Conversation",
+                        "analysisInput": {
+                            "conversationItem": {
+                                "participantId": "1",
+                                "id": "1",
+                                "modality": "text",
+                                "language": "en",
+                                "text": query
                             },
-                            "parameters": {
-                                "projectName": cls_project,
-                                "deploymentName": deployment_slot,
-                                "verbose": True
-                            }
+                            "isLoggingEnabled": False
+                        },
+                        "parameters": {
+                            "projectName": cls_project,
+                            "deploymentName": deployment_slot,
+                            "verbose": True
                         }
-                    )
+                    }
+                )
 
                 top_intent = result["result"]["prediction"]["topIntent"]
                 entities = result["result"]["prediction"]["entities"]
 
                 print("View top intent:")
-                print("\tTop intent: {}".format(top_intent))
-                print("\tConfidence score: {}\n".format(result["result"]["prediction"]["intents"][0]["confidenceScore"]))
+                print(f"\tTop intent: {top_intent}")
+                print(f"\tConfidence score: {result['result']['prediction']['intents'][0]['confidenceScore']}\n")
 
                 print("View entities:")
                 for entity in entities:
-                    print("\tCategory: {}".format(entity["category"]))
-                    print("\tText: {}".format(entity["text"]))
-                    print("\tConfidence score: {}".format(entity["confidenceScore"]))
+                    print(f"\tCategory: {entity['category']}")
+                    print(f"\tText: {entity['text']}")
+                    print(f"\tConfidence score: {entity['confidenceScore']}")
 
                 # Apply the appropriate action
                 if top_intent == 'CheckBalance':
